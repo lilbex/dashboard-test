@@ -3,7 +3,7 @@ import styled from 'styled-components'
 // import { BsSearch } from "react-icons/bs";
 
 
-const CustomSearch = ({ placeholder ="Search for a patient"}) => {
+const CustomSearch = ({ placeholder ="Search for a task"}) => {
   return (
     <SearchStyle>
       <input placeholder={placeholder} />

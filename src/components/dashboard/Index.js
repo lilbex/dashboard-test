@@ -28,10 +28,15 @@ const DashboardStyle = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
+
   .task-container {
     display: flex;
     justify-content: space-around;
     gap: 10px;
+    @media screen and (max-width: 1280px) {
+      margin-bottom:10px;
+      
+    }
   }
   .graph-section {
     width: 100%;

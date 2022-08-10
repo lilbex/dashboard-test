@@ -53,7 +53,7 @@ const NavigationsStyle = styled.div`
   padding: 0;
 
   .side__nav {
-    width: 6%;
+    width: 5%;
     background: #fbfaff;
 
     width: 100%;
@@ -64,7 +64,7 @@ const NavigationsStyle = styled.div`
     justify-content: flex-start;
   }
   .side__nav__header {
-    margin-top:10px;
+    margin-top: 10px;
   }
   .side__nav-section-2 {
     margin-top: 40px;
@@ -74,33 +74,39 @@ const NavigationsStyle = styled.div`
     flex-direction: column;
     gap: 25px;
   }
+  .right__side {
+    display: flex;
+    flex-direction: column;
+    width: 95%;
+    margin: 0;
+    padding: 0;
+  }
   .top__nav {
-    width: 100% !important;
+    width: 100%;
+
     height: 76px;
     background: #ffffff;
     margin: 0;
     padding: 0;
   }
-  .right__side {
-    display: flex;
-    flex-direction: column;
-    width: 94%;
-    margin: 0;
-    padding: 0;
-  }
+
   .dashboard__content {
+    width: 100%;
     display: flex;
     margin: 0;
     padding: 0;
+    overflow-x: hidden;
+    
   }
-  width: 100%;
-  /* gap: 5px; */
   .left {
-    width: 75%;
+    width: 70%;
     padding: 20px;
+    @media screen and (max-width: 1280px) {
+      padding:10px;
+    }
   }
   .right {
-    width: 25%;
+    width: 27%;
   }
 
   .search__container {

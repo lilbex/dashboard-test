@@ -1,49 +1,135 @@
-import React from "react";
+import React, { useState } from "react";
 import Input from "../../atoms/InputField";
 import styled from "styled-components";
 import Collaborators from "./CollaboratorButton";
 import Messages from "./Messages";
+import {toast} from 'react-toastify';
 
 const LeftSide = () => {
+  const [field, setField] = useState({
+    budgetTitle: "",
+    startDate: "",
+    endDate: "",
+    hourBudgeted: "",
+    collaborators: [],
+  });
+  const [error, setError] = useState([])
+  // console.log(field);
+  const handleChange = (e) => {
+    setField({
+      ...field,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // check if end date is greater than start date
+    if (field.endDate < field.startDate) {
+      setError([...error, "End date should be greater than start date"]);
+      return;
+    }
+    if(field.hourBudgeted==="" || field.budgetTitle==="" || field.endDate==="" || field.startDate===""){
+      setError([...error, "All fields are required"]);
+      return;
+    }
+    // check if budget hour is greater than 0 or not a number
+    if (field.hourBudgeted <= 0 || isNaN(field.hourBudgeted)) {
+      setError([...error, "Budget hour should be greater than 0"]);
+      return;
+    }
+    
+    try {
+      const existingData = localStorage.getItem("data")
+        ? JSON.parse(localStorage.getItem("data"))
+        : [];
+      existingData.push(field);
+      localStorage.setItem("data", JSON.stringify(existingData));
+      setField({
+        budgetTitle: "",
+        startDate: "",
+        endDate: "",
+        hourBudgeted: "",
+      });
+      toast.success("Task added successfully");
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <IndexStyle>
       <div className="section-1">
         <p className="common-p">Today’s Schedule</p>
         <div className="title_action">
           <img src="images/dashboard-sing.svg" alt="" />
-          <img src="images/calender.svg" alt=""/>
+          <img src="images/calender.svg" alt="" />
         </div>
       </div>
       <div className="section-1 ">
         <p className="common-p">New Tasks</p>
-        <img src="images/three-dots.svg" alt=""/>
+        <img src="images/three-dots.svg" alt="" />
       </div>
       <div className="form-section">
-        <div className="form-group">
-          <Input type="text" label="Task title" placeholder="Create new" />
-        </div>
-        {/* <div className="form-group emoji-selection"></div> */}
-        <div className="form-group">
-          <div className="collaborator_wrapper">
-            <Collaborators />
-            <Collaborators />
-            <img className="add-user" src="images/plus-bg.svg" alt=""/>
-            <img className="add-user" src="images/arrow-right.svg" alt="" />
+        <form>
+         {error.length > 0 && error.map((err, index) => (
+           <p className="error" key={index}>{err}</p>
+          ))}
+          <div className="form-group">
+            <Input
+              value={field.budgetTitle}
+              onChange={(e) => handleChange(e)}
+              name="budgetTitle"
+              type="text"
+              label="Task title"
+              placeholder="Create new"
+            />
           </div>
-        </div>
-        <div className="form-group">
-          <p>Time to complete</p>
-          <Input label="start date" type="date" placeholder="Start date" />
-          <Input label="end date" type="date" placeholder="End date" />
-        </div>
-        <div className="form-group">
-          <p>Hours Budgeted</p>
-          <Input label="start date" type="text" placeholder="Enter Hours" />
-          <button className="button">Save</button>
-        </div>
+          {/* <div className="form-group emoji-selection"></div> */}
+          <div className="form-group">
+            <div className="collaborator_wrapper">
+              <Collaborators />
+              <Collaborators />
+              <img className="add-user" src="images/plus-bg.svg" alt="" />
+              <img className="add-user" src="images/arrow-right.svg" alt="" />
+            </div>
+          </div>
+          <div className="form-group">
+            <p>Time to complete</p>
+            <Input
+              name="startDate"
+              value={field.startDate}
+              onChange={(e) => handleChange(e)}
+              label="start date"
+              type="date"
+              placeholder="Start date"
+            />
+            <Input
+              name="endDate"
+              value={field.endDate}
+              onChange={(e) => handleChange(e)}
+              label="end date"
+              type="date"
+              placeholder="End date"
+            />
+          </div>
+          <div className="form-group">
+            <p>Hours Budgeted</p>
+            <Input
+              name="hourBudgeted"
+              value={field.hourBudgeted}
+              onChange={(e) => handleChange(e)}
+              type="number"
+              placeholder="Enter Hours"
+            />
+            <button onClick={handleSubmit} className="button">
+              Save
+            </button>
+          </div>
+        </form>
         <div className="message-wrapper">
           <p className="message">Messages</p>
-          <div >
+          <div>
             <Messages
               name="Johm Michael"
               message="Hello Michael, How are you?"
@@ -52,7 +138,6 @@ const LeftSide = () => {
               name="Rebecca Lorel"
               message="can wiuhytfhgjuiyuthe meet today?"
             />
-            
           </div>
         </div>
       </div>
@@ -69,7 +154,7 @@ const IndexStyle = styled.div`
   width: 100%;
   background: #ffffff;
   margin: 0;
-  padding: 20px;
+  padding: 15px;
   overflow: scroll;
   .section-1 {
     display: flex;
@@ -122,8 +207,8 @@ const IndexStyle = styled.div`
     margin-bottom: 5px;
   }
   .message-wrapper {
-    width:100%;
-    margin-bottom:2px;
+    width: 100%;
+    margin-bottom: 2px;
   }
   .message {
     font-family: "DM Sans";
@@ -132,5 +217,10 @@ const IndexStyle = styled.div`
     font-size: 20px;
     line-height: 26px;
     color: #005555;
+  }
+  .error {
+    color: red;
+    font-size: 12px;
+    margin-bottom: 5px;
   }
 `;
